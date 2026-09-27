@@ -1,0 +1,168 @@
+﻿@model LaPacaJerseys.Models.TiendaViewModel
+
+@{
+    ViewData["Title"] = "La Paca";
+}
+
+<div class="encabezado">
+
+    <h1>La Paca</h1>
+
+    <p>Tienda de Jerseys Deportivos</p>
+
+</div>
+
+
+<div class="contenedor-productos">
+
+    @foreach (var jersey in Model.Jerseys)
+    {
+        <div class="tarjeta-producto">
+
+            <img src="@jersey.Imagen"
+                 alt="@jersey.Nombre"
+                 class="imagen-jersey" />
+
+            <h3>@jersey.Nombre</h3>
+
+            <p>
+                <strong>Equipo:</strong>
+                @jersey.Equipo
+            </p>
+
+            <p>
+                <strong>SKU:</strong>
+                @jersey.SKU
+            </p>
+
+            <p>
+                <strong>Tallas:</strong>
+                @jersey.Talla
+            </p>
+
+            <p class="precio">
+
+                $@jersey.Precio
+
+            </p>
+
+            <button class="boton-agregar"
+                    onclick="agregarCarrito(
+                '@jersey.SKU',
+                '@jersey.Nombre',
+                @jersey.Precio)">
+
+                Agregar al carrito
+
+            </button>
+
+        </div>
+    }
+
+</div>
+
+
+<hr />
+
+
+<h2>Carrito de compras</h2>
+
+
+<table class="tabla-carrito">
+
+    <thead>
+
+        <tr>
+
+            <th>SKU</th>
+
+            <th>Producto</th>
+
+            <th>Precio</th>
+
+            <th>Acción</th>
+
+        </tr>
+
+    </thead>
+
+
+    <tbody id="carrito">
+    </tbody>
+
+</table>
+
+
+<div class="total-carrito">
+
+    Total a pagar:
+
+    $<span id="total">0.00</span>
+
+</div>
+
+
+<script>
+
+    let total = 0;
+
+
+    function agregarCarrito(sku, nombre, precio)
+    {
+
+        let tabla = document.getElementById("carrito");
+
+
+        let fila = tabla.insertRow();
+
+
+        let columnaSKU = fila.insertCell(0);
+
+        let columnaNombre = fila.insertCell(1);
+
+        let columnaPrecio = fila.insertCell(2);
+
+        let columnaAccion = fila.insertCell(3);
+
+
+        columnaSKU.innerHTML = sku;
+
+        columnaNombre.innerHTML = nombre;
+
+        columnaPrecio.innerHTML = "$" + precio.toFixed(2);
+
+
+        let botonEliminar =
+            document.createElement("button");
+
+
+        botonEliminar.innerHTML = "Eliminar";
+
+        botonEliminar.className = "boton-eliminar";
+
+
+        botonEliminar.onclick = function ()
+        {
+
+            total = total - precio;
+
+            document.getElementById("total")
+                .innerHTML = total.toFixed(2);
+
+            fila.remove();
+
+        };
+
+
+        columnaAccion.appendChild(botonEliminar);
+
+
+        total = total + precio;
+
+
+        document.getElementById("total")
+            .innerHTML = total.toFixed(2);
+
+    }
+
+</script>
